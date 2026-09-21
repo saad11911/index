@@ -154,7 +154,7 @@ body{color:#E6E2D8;font-family:FONTSTACK;font-size:10.5pt;line-height:1.5;-webki
 .page:last-child{break-after:auto}
 .pfoot{position:absolute;left:0.6in;right:0.6in;bottom:0.4in;display:flex;justify-content:space-between;font-size:8pt;color:#8C988E;letter-spacing:.02em}
 .coverpage{padding:0.9in 0.8in 0.75in;color:#ECE8DE;background-image:radial-gradient(ellipse at 85% 12%, rgba(194,160,99,.16), transparent 55%)}
-.coverpage p.eyebrow{font-size:10pt;letter-spacing:.18em;text-transform:uppercase;color:#C2A063;font-weight:600;margin:0;padding:0;border:0}
+.page.coverpage p.eyebrow{font-size:10pt;letter-spacing:.18em;text-transform:uppercase;color:#C2A063;font-weight:600;margin:0;padding:0;border:0}
 .coverpage h1{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:54pt;line-height:.98;letter-spacing:-.012em;margin:12pt 0 14pt;color:#ECE8DE}
 .coverpage .sub{color:#8C988E;font-size:14.5pt;line-height:1.4;max-width:34ch;margin:0}
 .coverpage .ledger{margin-top:34pt;border-top:1px solid rgba(194,160,99,.28)}
