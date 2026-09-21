@@ -10,14 +10,27 @@ from matplotlib.colors import LinearSegmentedColormap, TwoSlopeNorm
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-D, R, C = ROOT / "data", ROOT / "results", ROOT / "charts"
+import os
+THEME = os.environ.get("CHART_THEME", "light")
+D, R = ROOT / "data", ROOT / "results"
+C = ROOT / ("charts" if THEME == "light" else "charts_dark")
 C.mkdir(exist_ok=True)
 
-# palette (dataviz reference instance, light mode)
-SURF, INK, INK2, MUTED, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#8a8983", "#e6e5e1"
-S1, S2, S3, S4 = "#2a78d6", "#eb6834", "#1baf7a", "#eda100"   # categorical slots 1-4
-SEQ = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
-DIV_NEG, DIV_MID, DIV_POS = "#e34948", "#f0efec", "#2a78d6"
+# palettes: the dataviz reference instance (light) and its dark-surface steps, on the report's ink-green ground
+PALETTES = {
+    "light": dict(SURF="#fcfcfb", INK="#0b0b0b", INK2="#52514e", MUTED="#8a8983", GRID="#e6e5e1",
+                  S1="#2a78d6", S2="#eb6834", S3="#1baf7a", S4="#eda100", DIV_NEG="#e34948", DIV_MID="#f0efec", DIV_POS="#2a78d6",
+                  BAR_GRAY="#c9c8c3", SPAN_ALPHA=0.10, Q4SPAN="#e6e5e1", Q4ALPHA=0.5,
+                  TINT={"ZIRP": "#e3efe9", "ZIRP/QE": "#e3efe9", "Hiking": "#fbe3da", "Hold": "#fcfcfb", "Cut": "#dbe9f9"}),
+    "dark": dict(SURF="#0F1C17", INK="#ECE8DE", INK2="#C9C5B9", MUTED="#8C988E", GRID="#26332D",
+                 S1="#3987e5", S2="#d95926", S3="#199e70", S4="#c98500", DIV_NEG="#e66767", DIV_MID="#343f39", DIV_POS="#3987e5",
+                 BAR_GRAY="#3b4842", SPAN_ALPHA=0.20, Q4SPAN="#ECE8DE", Q4ALPHA=0.07,
+                 TINT={"ZIRP": "#1F6E5259", "ZIRP/QE": "#1F6E5259", "Hiking": "#B23A3A59", "Hold": "#0F1C17", "Cut": "#2a78d659"}),
+}
+P = PALETTES[THEME]
+SURF, INK, INK2, MUTED, GRID = P["SURF"], P["INK"], P["INK2"], P["MUTED"], P["GRID"]
+S1, S2, S3, S4 = P["S1"], P["S2"], P["S3"], P["S4"]
+DIV_NEG, DIV_MID, DIV_POS = P["DIV_NEG"], P["DIV_MID"], P["DIV_POS"]
 plt.rcParams.update({
     "figure.facecolor": SURF, "axes.facecolor": SURF, "savefig.facecolor": SURF,
     "axes.edgecolor": GRID, "axes.linewidth": 1, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 1,
@@ -52,7 +65,7 @@ for i in range(vals.shape[0]):
             continue
         dark = abs(clipped[i, j]) > 28
         txt = f"{v:+.0f}" if abs(v) < 100 else f"{v:+.0f}"
-        ax.text(j, i, txt, ha="center", va="center", fontsize=8.5, color="white" if dark else INK)
+        ax.text(j, i, txt, ha="center", va="center", fontsize=8.5, color=("white" if dark else INK) if THEME == "light" else INK)
 # white 2px gaps between cells
 for k in range(13):
     ax.axvline(k - 0.5, color=SURF, lw=2)
@@ -70,7 +83,7 @@ save(fig, "01_monthly_returns_heatmap.png")
 ms = pd.read_csv(R / "month_stats_2013_2025.csv", index_col=0)
 fig, ax = plt.subplots(figsize=(10, 5.2))
 x = np.arange(12)
-colors = [S1 if m in ("Oct", "Nov") else "#c9c8c3" for m in ms.index]
+colors = [S1 if m in ("Oct", "Nov") else P["BAR_GRAY"] for m in ms.index]
 ax.bar(x, ms["median"] * 100, width=0.62, color=colors, zorder=3)
 ax.errorbar(x, ms["median"] * 100, yerr=[(ms["median"] - ms["median_ci_lo"]) * 100, (ms["median_ci_hi"] - ms["median"]) * 100],
             fmt="none", ecolor=INK2, elinewidth=1.2, capsize=3, zorder=4)
@@ -141,7 +154,7 @@ for k in ["2013", "2017", "2021", "2025"]:
     ax.plot(s.index, s.values * 100, lw=2.2 if k == "2025" else 1.6, color=cols[k], label=f"{k} peak")
     ax.text(s.index[-1] + 6, s.values[-1] * 100, k, color=INK2, fontsize=9, va="center")
 d = S["peak_analog"]["days_since_2025_peak"]
-ax.axvspan(364, 406, color=DIV_NEG, alpha=0.10, lw=0)
+ax.axvspan(364, 406, color=DIV_NEG, alpha=P["SPAN_ALPHA"], lw=0)
 ax.text(385, 96, "prior cycle lows:\nday 364–406 after peak", ha="center", fontsize=8.5, color=INK2)
 ax.axvline(d, color=INK2, lw=1); ax.text(d - 6, 88, f"now: day {d}", ha="right", fontsize=9, color=INK2)
 ax.set_xlabel("Days since cycle peak"); ax.set_ylabel("Price as % of cycle peak"); ax.set_ylim(0, 105)
@@ -160,7 +173,7 @@ regimes = [("2013-01-01", "2015-12-16", "ZIRP"), ("2015-12-16", "2018-12-20", "H
            ("2022-03-16", "2023-07-27", "Hiking"), ("2023-07-27", "2024-09-18", "Hold"), ("2024-09-18", "2024-12-19", "Cut"),
            ("2024-12-19", "2025-09-17", "Hold"), ("2025-09-17", "2025-12-11", "Cut"), ("2025-12-11", "2026-09-16", "Hold"),
            ("2026-09-16", str(LAST.date()), "Hiking")]
-tint = {"ZIRP": "#e3efe9", "ZIRP/QE": "#e3efe9", "Hiking": "#fbe3da", "Hold": SURF, "Cut": "#dbe9f9"}
+tint = P["TINT"]
 for s0, s1, lab in regimes:
     a1.axvspan(pd.Timestamp(s0), pd.Timestamp(s1), color=tint[lab], lw=0, zorder=0)
     if lab != "Hold":
@@ -174,7 +187,7 @@ save(fig, "07_btc_vs_fed_regimes.png")
 # 8. realized volatility by month -------------------------------------------------------------
 vol = pd.read_csv(R / "realized_vol_by_month.csv", index_col=0).iloc[:, 0] * 100
 fig, ax = plt.subplots(figsize=(9, 4.2))
-ax.bar(range(12), vol.values, color=[S1 if m in ("Nov", "Dec") else "#c9c8c3" for m in vol.index], width=0.62, zorder=3)
+ax.bar(range(12), vol.values, color=[S1 if m in ("Nov", "Dec") else P["BAR_GRAY"] for m in vol.index], width=0.62, zorder=3)
 ax.set_xticks(range(12)); ax.set_xticklabels(vol.index); ax.set_ylabel("Annualized realized volatility, %")
 ax.set_title("October is the calmest month; November–December are where the big moves (both directions) happen (2013 – 2026)")
 save(fig, "08_realized_vol_by_month.png")
@@ -188,7 +201,7 @@ for y in [2014, 2018, 2022, 2026]:
     rel = s / base * 100; doy = (s.index - pd.Timestamp(f"{y}-01-01")).days
     ax.plot(doy, rel.values, color=cols[y], lw=2.2 if y == 2026 else 1.6, label=str(y))
     ax.text(doy[-1] + 4, rel.values[-1], str(y), color=INK2, fontsize=9, va="center")
-ax.axvspan(273, 365, color=GRID, alpha=0.5, lw=0); ax.text(319, 178, "Q4", ha="center", color=INK2, fontsize=9)
+ax.axvspan(273, 365, color=P["Q4SPAN"], alpha=P["Q4ALPHA"], lw=0); ax.text(319, 178, "Q4", ha="center", color=INK2, fontsize=9)
 ax.set_xlabel("Day of year"); ax.set_ylabel("Price, indexed to prior year-end = 100"); ax.set_ylim(0, 190)
 ax.legend(loc="upper left", title="Two years after a halving")
 ax.set_title("2026 against the three prior 'two years after halving' years: the same phase, a milder version")

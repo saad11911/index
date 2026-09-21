@@ -4,7 +4,9 @@ import base64
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-C = ROOT / "charts"
+import os
+C = ROOT / os.environ.get("CHART_DIR", "charts")
+OUT_FILE = ROOT / os.environ.get("REPORT_OUT", "report.html")
 
 def img(name, alt, caption):
     b = base64.b64encode((C / name).read_bytes()).decode()
@@ -280,5 +282,5 @@ BODY = f"""
 """
 
 html = (HEAD + BODY).encode("ascii", "xmlcharrefreplace").decode("ascii")  # pure ASCII: renders correctly with or without a charset header
-(ROOT / "report.html").write_text(html, encoding="ascii")
-print("report.html", round((ROOT / "report.html").stat().st_size / 1e6, 2), "MB")
+OUT_FILE.write_text(html, encoding="ascii")
+print(OUT_FILE.name, round(OUT_FILE.stat().st_size / 1e6, 2), "MB")
