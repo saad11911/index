@@ -78,7 +78,7 @@ h1{{font-size:78px;margin:18px 0 22px}}
 .mark{{top:44px;right:64px}} .mark .glyph{{font-size:30px}} .mark .lbl{{font-size:14px}}
 """
         body = f"""<div class="cover">{MARK}<div class="grid"><div>
-<p class="eyebrow">Research note &middot; September 2026</p>
+<p class="eyebrow">Bitcoin 4Q26 Outlook &middot; Technical note</p>
 <h1>Uptober?</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 </div><div class="ledger">{LEDGER}</div></div>
@@ -96,7 +96,7 @@ h1{{font-size:96px;margin:20px 0 24px}}
 .mark{{top:78px;right:76px}} .mark .glyph{{font-size:34px}} .mark .lbl{{font-size:16px}}
 """
         body = f"""<div class="cover">{MARK}
-<p class="eyebrow">Research note &middot; September 2026</p>
+<p class="eyebrow">Bitcoin 4Q26 Outlook &middot; Technical note</p>
 <h1>Uptober?</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 <div class="ledger">{LEDGER}</div>
@@ -221,9 +221,9 @@ td.hl,tr.hl td{background:rgba(194,160,99,.16);font-weight:600;color:#ECE8DE}
 code{font-family:Menlo,Consolas,monospace;font-size:.9em;color:#D8C195}
 a{color:#C2A063}
 """.replace("FONTSTACK", FONT_STACK)
-FOOT = "Uptober? &middot; Bitcoin's fourth quarter &middot; Research note, 21 September 2026"
+FOOT = "Uptober? &middot; Bitcoin 4Q26 Outlook &middot; Technical note, 21 September 2026"
 pages = [f"""<div class="page coverpage"><div class="cmark"><span class="glyph">19K</span><span class="lbl">Holdings</span></div>
-<p class="eyebrow">Research note &middot; 21 September 2026</p>
+<p class="eyebrow">Bitcoin 4Q26 Outlook &middot; Technical note</p>
 <h1>Uptober?</h1>
 <p class="sub">What fifteen years of daily prices, four halving cycles and 110 Fed meetings say about October&ndash;December 2026.</p>
 <div class="ledger">{LEDGER}</div>
