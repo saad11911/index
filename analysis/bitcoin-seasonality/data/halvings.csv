@@ -1,0 +1,5 @@
+date,block_height,subsidy_btc,note
+2012-11-28,210000,25,First halving
+2016-07-09,420000,12.5,Second halving
+2020-05-11,630000,6.25,Third halving
+2024-04-20,840000,3.125,Fourth halving (block mined 2024-04-20 00:09 UTC)
