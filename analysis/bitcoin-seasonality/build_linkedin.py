@@ -79,7 +79,7 @@ h1{{font-size:78px;margin:18px 0 22px}}
 """
         body = f"""<div class="cover">{MARK}<div class="grid"><div>
 <p class="eyebrow">Research note &middot; September 2026</p>
-<h1>Bitcoin's Fourth Quarter</h1>
+<h1>Uptober?</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 </div><div class="ledger">{LEDGER}</div></div>
 <div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>19kholdings.com &middot; daily prices to 15 Sep 2026</span></div>
@@ -97,7 +97,7 @@ h1{{font-size:96px;margin:20px 0 24px}}
 """
         body = f"""<div class="cover">{MARK}
 <p class="eyebrow">Research note &middot; September 2026</p>
-<h1>Bitcoin's Fourth Quarter</h1>
+<h1>Uptober?</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 <div class="ledger">{LEDGER}</div>
 <div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>19kholdings.com &middot; daily prices to 15 Sep 2026</span></div>
@@ -221,10 +221,10 @@ td.hl,tr.hl td{background:rgba(194,160,99,.16);font-weight:600;color:#ECE8DE}
 code{font-family:Menlo,Consolas,monospace;font-size:.9em;color:#D8C195}
 a{color:#C2A063}
 """.replace("FONTSTACK", FONT_STACK)
-FOOT = "Bitcoin's Fourth Quarter &middot; Research note, 21 September 2026"
+FOOT = "Uptober? &middot; Bitcoin's fourth quarter &middot; Research note, 21 September 2026"
 pages = [f"""<div class="page coverpage"><div class="cmark"><span class="glyph">19K</span><span class="lbl">Holdings</span></div>
 <p class="eyebrow">Research note &middot; 21 September 2026</p>
-<h1>Bitcoin's Fourth Quarter</h1>
+<h1>Uptober?</h1>
 <p class="sub">What fifteen years of daily prices, four halving cycles and 110 Fed meetings say about October&ndash;December 2026.</p>
 <div class="ledger">{LEDGER}</div>
 <div class="foot"><span>Not investment advice</span><span>19kholdings.com &middot; daily prices 2010 &ndash; 15 Sep 2026</span></div>
@@ -239,9 +239,9 @@ for n, (cls, ix) in enumerate(PLAN, start=2):
     if 57 in ix:
         j = ix.index(57); parts = parts[:j] + [f'<div class="sources">{"".join(parts[j:])}</div>']
     pages.append(f'<div class="page {cls}">{"".join(parts)}<div class="pfoot"><span class="fl"><span class="fmark"><span class="glyph">19K</span><span class="lbl">Holdings</span></span><span>{FOOT}</span></span><span>{n}</span></div></div>')
-pdf_html = f"<!doctype html><html><head><meta charset='utf-8'><title>Bitcoin's Fourth Quarter</title><style>{PRINT_CSS}</style></head><body>{''.join(pages)}</body></html>"
+pdf_html = f"<!doctype html><html><head><meta charset='utf-8'><title>Uptober?</title><style>{PRINT_CSS}</style></head><body>{''.join(pages)}</body></html>"
 p = OUT / "report_print.html"; p.write_text(pdf_html, encoding="utf-8")
-pdf = OUT / "Bitcoins_Fourth_Quarter_Q4_2026_outlook.pdf"
+pdf = OUT / "Uptober_Bitcoin_Q4_2026_outlook.pdf"
 run([f"--print-to-pdf={pdf}", "--no-pdf-header-footer", f"file://{p}"])
 p.unlink(); dark_src.unlink()
 print("pdf size MB", round(pdf.stat().st_size / 1e6, 2), "pages planned", len(pages))

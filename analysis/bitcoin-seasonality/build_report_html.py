@@ -13,7 +13,7 @@ def img(name, alt, caption):
     b = base64.b64encode((C / name).read_bytes()).decode()
     return f'<figure><img src="data:image/png;base64,{b}" alt="{alt}" loading="lazy"><figcaption>{caption}</figcaption></figure>'
 
-HEAD = """<title>Bitcoin's Fourth Quarter</title>
+HEAD = """<title>Uptober?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -79,7 +79,7 @@ BODY = f"""
 <div class="topbar"><a class="mark" href="https://19kholdings.com"><span class="glyph">19K</span><span class="lbl">Holdings</span></a><span class="site">19kholdings.com</span></div>
 <header>
 <p class="eyebrow">Research note · 21 September 2026</p>
-<h1>Bitcoin's Fourth Quarter</h1>
+<h1>Uptober?</h1>
 <p class="stand">"Uptober" is real but small, November is mostly a legend, the Fed is not the driver, and the pattern people are trading is a four‑year halving cycle wearing a calendar costume. Here is what fifteen years of daily prices actually say, and what they imply for October–December 2026.</p>
 <p class="asof">Daily prices 18 July 2010 – 15 September 2026 (last close $75,686; spot about $78,000 on 18 September). Fed funds target 3.75–4.00% after the 16 September hike. All statistics reproducible from the accompanying code and data. This is a data study, not investment advice.</p>
 </header>
