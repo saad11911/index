@@ -5,7 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 import os
-C = ROOT / os.environ.get("CHART_DIR", "charts")
+THEME = os.environ.get("THEME", "dark")
+C = ROOT / os.environ.get("CHART_DIR", "charts_dark" if THEME == "dark" else "charts")
 OUT_FILE = ROOT / os.environ.get("REPORT_OUT", "report.html")
 
 def img(name, alt, caption):
@@ -17,16 +18,10 @@ HEAD = """<title>Bitcoin's Fourth Quarter</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;
-  --ground:#F3F2EE;--panel:#FBFAF7;--ink:#10201A;--ink-2:#2E3A34;--muted:#5F6B64;--line:rgba(16,32,26,.14);--line-soft:rgba(16,32,26,.07);
-  --accent:#8C6D35;--accent-soft:rgba(140,109,53,.12);--neg:#B23A3A;--pos:#1F6E52;--plate:#FCFCFB;
+:root{color-scheme:dark;
+  --ground:#0B1411;--panel:#12241D;--ink:#ECE8DE;--ink-2:#D5D1C6;--muted:#8C988E;--line:rgba(194,160,99,.26);--line-soft:rgba(236,232,222,.09);
+  --accent:#C2A063;--accent-soft:rgba(194,160,99,.14);--neg:#E07070;--pos:#5FBF95;--plate:#0B1411;
   --serif:"Fraunces",Georgia,"Times New Roman",serif;--sans:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
-  --ground:#0B1411;--panel:#12241D;--ink:#ECE8DE;--ink-2:#D5D1C6;--muted:#8C988E;--line:rgba(194,160,99,.26);--line-soft:rgba(236,232,222,.09);
-  --accent:#C2A063;--accent-soft:rgba(194,160,99,.14);--neg:#E07070;--pos:#5FBF95;--plate:#FCFCFB;}}
-:root[data-theme="dark"]{color-scheme:dark;
-  --ground:#0B1411;--panel:#12241D;--ink:#ECE8DE;--ink-2:#D5D1C6;--muted:#8C988E;--line:rgba(194,160,99,.26);--line-soft:rgba(236,232,222,.09);
-  --accent:#C2A063;--accent-soft:rgba(194,160,99,.14);--neg:#E07070;--pos:#5FBF95;--plate:#FCFCFB;}
 *{box-sizing:border-box}
 body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
 .wrap{max-width:900px;margin:0 auto;padding-block:40px 64px;padding-inline:20px}
@@ -50,6 +45,11 @@ section{margin-top:64px;padding-top:28px;border-top:1px solid var(--line)}
 .note{font-size:14px;color:var(--muted)}
 figure{margin:28px 0}
 figure img{display:block;width:100%;max-width:100%;height:auto;background:var(--plate);border:1px solid var(--line);border-radius:4px}
+.mark{display:flex;align-items:baseline;gap:11px;color:var(--ink);text-decoration:none}
+.mark .glyph{font-family:var(--serif);font-weight:600;font-size:23px;letter-spacing:.02em;color:var(--accent)}
+.mark .lbl{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.topbar{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding-bottom:22px;margin-bottom:34px;border-bottom:1px solid var(--line)}
+.topbar .site{font-size:13px;color:var(--muted);letter-spacing:.04em}
 figcaption{font-size:14px;color:var(--muted);margin-top:8px;max-width:75ch}
 .tbl{overflow-x:auto;margin:18px 0 22px;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums;min-width:520px}
@@ -76,6 +76,7 @@ a{color:var(--accent)}
 
 BODY = f"""
 <div class="wrap">
+<div class="topbar"><a class="mark" href="https://19kholdings.com"><span class="glyph">19K</span><span class="lbl">Holdings</span></a><span class="site">19kholdings.com</span></div>
 <header>
 <p class="eyebrow">Research note · 21 September 2026</p>
 <h1>Bitcoin's Fourth Quarter</h1>
@@ -275,6 +276,7 @@ BODY = f"""
 </section>
 
 <footer>
+<div class="topbar" style="margin-bottom:18px"><span class="mark"><span class="glyph">19K</span><span class="lbl">Holdings</span></span><span class="site">Cross-border principal investment &amp; operating platform · 19kholdings.com</span></div>
 <p>Method: monthly returns from month‑end closes; per‑month mean, median, hit rate, t‑test on log returns, Wilcoxon signed‑rank test, 20,000‑sample bootstrap intervals; max‑|t| permutation test for the twelve‑month family; cycle phase by calendar year relative to the latest halving; Fed regimes from the target‑rate path; FOMC event study from the close before each decision. Code, data and result tables: <code>analysis/bitcoin-seasonality</code> in the repository (build_dataset.py, analyze.py, charts.py).</p>
 <p>Sources: Coin Metrics community data (CC BY‑NC 4.0); Habrador/Bitcoin‑price‑visualization; Federal Reserve press releases and FOMC calendars; Shiller S&amp;P 500 monthly data; press quotes for 2026 month‑end verification.</p>
 </footer>

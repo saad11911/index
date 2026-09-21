@@ -34,6 +34,7 @@ pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in zip(xs, ys))
 SPARK = (f'<svg class="spark" viewBox="0 0 {W} {H}" preserveAspectRatio="none" aria-hidden="true">'
          f'<polyline points="{pts}" fill="none" stroke="#C2A063" stroke-width="2.2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>')
 
+MARK = '<div class="mark"><span class="glyph">19K</span><span class="lbl">Holdings</span></div>'
 ODDS = [
     ("October closes above its 30 September close", "~60%"),
     ("October + November combined positive", "~50%"),
@@ -58,26 +59,30 @@ h1{font-family:"Fraunces",Georgia,serif;font-weight:500;line-height:.98;letter-s
 .row span{color:var(--paper)}
 .row em{font-family:"Fraunces",Georgia,serif;font-style:normal;font-weight:500;color:var(--brass);font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
 .foot{position:absolute;display:flex;justify-content:space-between;color:var(--muted);font-size:14px;letter-spacing:.02em}
+.mark{position:absolute;display:flex;align-items:baseline;gap:11px}
+.mark .glyph{font-family:"Fraunces",Georgia,serif;font-weight:600;letter-spacing:.02em;color:var(--brass)}
+.mark .lbl{letter-spacing:.28em;text-transform:uppercase;color:var(--muted);font-weight:500}
 """
 
 def cover_html(width, height, layout):
     if layout == "landscape":
         css = BASE_CSS + f"""
 .cover{{width:{width}px;height:{height}px;padding:56px 64px 52px}}
-.grid{{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;height:100%;align-items:start}}
+.grid{{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;height:100%;align-items:start;padding-top:50px}}
 h1{{font-size:78px;margin:18px 0 22px}}
 .sub{{font-size:21px;max-width:30ch}}
 .ledger{{margin-top:6px}}
 .row{{padding:12px 0}} .row span{{font-size:18px;line-height:1.25}} .row em{{font-size:40px}}
 .foot{{left:64px;right:64px;bottom:22px}}
 .spark{{height:34%;opacity:.24}}
+.mark{{top:44px;right:64px}} .mark .glyph{{font-size:30px}} .mark .lbl{{font-size:14px}}
 """
-        body = f"""<div class="cover"><div class="grid"><div>
+        body = f"""<div class="cover">{MARK}<div class="grid"><div>
 <p class="eyebrow">Research note &middot; September 2026</p>
 <h1>Bitcoin's Fourth Quarter</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 </div><div class="ledger">{LEDGER}</div></div>
-<div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>Daily prices to 15 Sep 2026</span></div>
+<div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>19kholdings.com &middot; daily prices to 15 Sep 2026</span></div>
 {SPARK}</div>"""
     else:
         css = BASE_CSS + f"""
@@ -88,13 +93,14 @@ h1{{font-size:96px;margin:20px 0 24px}}
 .row{{padding:18px 0}} .row span{{font-size:24px;line-height:1.25;max-width:30ch}} .row em{{font-size:56px}}
 .foot{{left:76px;right:76px;bottom:34px;font-size:17px}}
 .spark{{height:26%;opacity:.22}}
+.mark{{top:78px;right:76px}} .mark .glyph{{font-size:34px}} .mark .lbl{{font-size:16px}}
 """
-        body = f"""<div class="cover">
+        body = f"""<div class="cover">{MARK}
 <p class="eyebrow">Research note &middot; September 2026</p>
 <h1>Bitcoin's Fourth Quarter</h1>
 <p class="sub">Six odds for October&ndash;December 2026, from fifteen years of daily prices, four halving cycles and 110 Fed meetings.</p>
 <div class="ledger">{LEDGER}</div>
-<div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>Daily prices to 15 Sep 2026</span></div>
+<div class="foot"><span>Full report in the PDF &middot; not investment advice</span><span>19kholdings.com &middot; daily prices to 15 Sep 2026</span></div>
 {SPARK}</div>"""
     return f"<!doctype html><html><head><meta charset='utf-8'><title>cover</title><style>{css}</style></head><body>{body}</body></html>"
 
@@ -118,7 +124,7 @@ subprocess.run([sys.executable, str(ROOT / "build_report_html.py")], check=True,
                env={**os.environ, "CHART_DIR": "charts_dark", "REPORT_OUT": "linkedin/_report_dark.html"}, capture_output=True)
 body = dark_src.read_text(encoding="ascii").split("</style>", 1)[1]
 body = re.sub(r"<header>.*?</header>", "", body, count=1, flags=re.S)
-B = [h for _, h in blocks_of(body)]
+B = [h for _, h in blocks_of(body) if not h.startswith('<div class="topbar"')]   # the web footer's wordmark is not report content
 assert len(B) == 59, len(B)
 NARROW = {46, 47}
 PLAN = [  # block indices per page (after the cover)
@@ -148,7 +154,7 @@ body{color:#E6E2D8;font-family:FONTSTACK;font-size:10.5pt;line-height:1.5;-webki
 .page:last-child{break-after:auto}
 .pfoot{position:absolute;left:0.6in;right:0.6in;bottom:0.4in;display:flex;justify-content:space-between;font-size:8pt;color:#8C988E;letter-spacing:.02em}
 .coverpage{padding:0.9in 0.8in 0.75in;color:#ECE8DE;background-image:radial-gradient(ellipse at 85% 12%, rgba(194,160,99,.16), transparent 55%)}
-.coverpage .eyebrow{font-size:10pt;letter-spacing:.18em;text-transform:uppercase;color:#C2A063;font-weight:600;margin:0}
+.coverpage p.eyebrow{font-size:10pt;letter-spacing:.18em;text-transform:uppercase;color:#C2A063;font-weight:600;margin:0;padding:0;border:0}
 .coverpage h1{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:54pt;line-height:.98;letter-spacing:-.012em;margin:12pt 0 14pt;color:#ECE8DE}
 .coverpage .sub{color:#8C988E;font-size:14.5pt;line-height:1.4;max-width:34ch;margin:0}
 .coverpage .ledger{margin-top:34pt;border-top:1px solid rgba(194,160,99,.28)}
@@ -157,6 +163,13 @@ body{color:#E6E2D8;font-family:FONTSTACK;font-size:10.5pt;line-height:1.5;-webki
 .coverpage .row em{font-family:"Fraunces",Georgia,serif;font-style:normal;font-weight:500;font-size:32pt;color:#C2A063;font-variant-numeric:tabular-nums;line-height:1}
 .coverpage .foot{position:absolute;left:0.8in;right:0.8in;bottom:0.5in;display:flex;justify-content:space-between;color:#8C988E;font-size:9pt}
 .coverpage .spark{position:absolute;left:0;right:0;bottom:0;width:100%;height:24%;opacity:.22}
+.coverpage .cmark{position:absolute;top:0.86in;right:0.8in;display:flex;align-items:baseline;gap:8pt}
+.coverpage .cmark .glyph{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:22pt;letter-spacing:.02em;color:#C2A063}
+.coverpage .cmark .lbl{font-size:10pt;letter-spacing:.28em;text-transform:uppercase;color:#8C988E;font-weight:500}
+.pfoot .fl{display:flex;align-items:baseline;gap:10pt}
+.pfoot .fmark{display:flex;align-items:baseline;gap:5pt}
+.pfoot .fmark .glyph{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:10pt;letter-spacing:.02em;color:#C2A063}
+.pfoot .fmark .lbl{font-size:6.5pt;letter-spacing:.28em;text-transform:uppercase;color:#8C988E;font-weight:500}
 .eyebrow{font-size:8.5pt;letter-spacing:.14em;text-transform:uppercase;color:#C2A063;font-weight:600;margin:0 0 6pt}
 h2{font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:22pt;line-height:1.12;margin:0 0 10pt;color:#ECE8DE}
 h3{font-size:11.5pt;font-weight:600;margin:14pt 0 6pt;color:#ECE8DE}
@@ -209,12 +222,12 @@ code{font-family:Menlo,Consolas,monospace;font-size:.9em;color:#D8C195}
 a{color:#C2A063}
 """.replace("FONTSTACK", FONT_STACK)
 FOOT = "Bitcoin's Fourth Quarter &middot; Research note, 21 September 2026"
-pages = [f"""<div class="page coverpage">
+pages = [f"""<div class="page coverpage"><div class="cmark"><span class="glyph">19K</span><span class="lbl">Holdings</span></div>
 <p class="eyebrow">Research note &middot; 21 September 2026</p>
 <h1>Bitcoin's Fourth Quarter</h1>
 <p class="sub">What fifteen years of daily prices, four halving cycles and 110 Fed meetings say about October&ndash;December 2026.</p>
 <div class="ledger">{LEDGER}</div>
-<div class="foot"><span>Not investment advice</span><span>Daily prices 2010 &ndash; 15 Sep 2026</span></div>
+<div class="foot"><span>Not investment advice</span><span>19kholdings.com &middot; daily prices 2010 &ndash; 15 Sep 2026</span></div>
 {SPARK}</div>"""]
 for n, (cls, ix) in enumerate(PLAN, start=2):
     parts = []
@@ -225,7 +238,7 @@ for n, (cls, ix) in enumerate(PLAN, start=2):
         parts.append(h)
     if 57 in ix:
         j = ix.index(57); parts = parts[:j] + [f'<div class="sources">{"".join(parts[j:])}</div>']
-    pages.append(f'<div class="page {cls}">{"".join(parts)}<div class="pfoot"><span>{FOOT}</span><span>{n}</span></div></div>')
+    pages.append(f'<div class="page {cls}">{"".join(parts)}<div class="pfoot"><span class="fl"><span class="fmark"><span class="glyph">19K</span><span class="lbl">Holdings</span></span><span>{FOOT}</span></span><span>{n}</span></div></div>')
 pdf_html = f"<!doctype html><html><head><meta charset='utf-8'><title>Bitcoin's Fourth Quarter</title><style>{PRINT_CSS}</style></head><body>{''.join(pages)}</body></html>"
 p = OUT / "report_print.html"; p.write_text(pdf_html, encoding="utf-8")
 pdf = OUT / "Bitcoins_Fourth_Quarter_Q4_2026_outlook.pdf"

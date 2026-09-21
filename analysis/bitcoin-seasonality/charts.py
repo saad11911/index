@@ -22,10 +22,10 @@ PALETTES = {
                   S1="#2a78d6", S2="#eb6834", S3="#1baf7a", S4="#eda100", DIV_NEG="#e34948", DIV_MID="#f0efec", DIV_POS="#2a78d6",
                   BAR_GRAY="#c9c8c3", SPAN_ALPHA=0.10, Q4SPAN="#e6e5e1", Q4ALPHA=0.5,
                   TINT={"ZIRP": "#e3efe9", "ZIRP/QE": "#e3efe9", "Hiking": "#fbe3da", "Hold": "#fcfcfb", "Cut": "#dbe9f9"}),
-    "dark": dict(SURF="#0F1C17", INK="#ECE8DE", INK2="#C9C5B9", MUTED="#8C988E", GRID="#26332D",
+    "dark": dict(SURF="#0B1411", INK="#ECE8DE", INK2="#C9C5B9", MUTED="#8C988E", GRID="#26332D",
                  S1="#3987e5", S2="#d95926", S3="#199e70", S4="#c98500", DIV_NEG="#e66767", DIV_MID="#343f39", DIV_POS="#3987e5",
                  BAR_GRAY="#3b4842", SPAN_ALPHA=0.20, Q4SPAN="#ECE8DE", Q4ALPHA=0.07,
-                 TINT={"ZIRP": "#1F6E5259", "ZIRP/QE": "#1F6E5259", "Hiking": "#B23A3A59", "Hold": "#0F1C17", "Cut": "#2a78d659"}),
+                 TINT={"ZIRP": "#1F6E5259", "ZIRP/QE": "#1F6E5259", "Hiking": "#B23A3A59", "Hold": "#0B1411", "Cut": "#2a78d659"}),
 }
 P = PALETTES[THEME]
 SURF, INK, INK2, MUTED, GRID = P["SURF"], P["INK"], P["INK2"], P["MUTED"], P["GRID"]
