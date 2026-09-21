@@ -279,5 +279,6 @@ BODY = f"""
 </div>
 """
 
-(ROOT / "report.html").write_text(HEAD + BODY, encoding="utf-8")
+html = (HEAD + BODY).encode("ascii", "xmlcharrefreplace").decode("ascii")  # pure ASCII: renders correctly with or without a charset header
+(ROOT / "report.html").write_text(html, encoding="ascii")
 print("report.html", round((ROOT / "report.html").stat().st_size / 1e6, 2), "MB")
